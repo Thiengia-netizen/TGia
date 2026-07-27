@@ -112,7 +112,7 @@ async function initSchema() {
     const password = process.env.ADMIN_PASSWORD || 'admin123';
     const hash = await bcrypt.hash(password, 10);
     await pool.query(
-      'INSERT INTO users (username, password_hash, name, role, is_superadmin) VALUES ($1,$2,$3,$4,true)',
+     INSERT INTO users (username, password_hash, name, role, is_superadmin) VALUES ($1, $2, $3, $4, $5)', // Phải đủ từ $1 đến $5
       [username, hash, 'Quản lý', 'admin', true]
     );
     console.log(`✅ Đã tạo tài khoản quản lý đầu tiên — username: "${username}"`);
