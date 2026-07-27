@@ -102,17 +102,19 @@ async function initSchema() {
     );
   `);
 
-  // ------------------------------------------------------------------
+    // ------------------------------------------------------------------
   // 5. Seed tài khoản quản lý đầu tiên NẾU bảng users đang trống hẳn
-  //    (an toàn: không đụng tới user đã có sẵn)
   // ------------------------------------------------------------------
   const { rows: userCountRows } = await pool.query('SELECT COUNT(*)::int AS c FROM users');
-  if (userCountRows[0].c === 0) {
+  
+  if (userCountRows && userCountRows.length > 0 && userCountRows[0].c === 0) {
     const username = process.env.ADMIN_USERNAME || 'admin';
     const password = process.env.ADMIN_PASSWORD || 'admin123';
     const hash = await bcrypt.hash(password, 10);
+    
+    // Câu lệnh SQL chuẩn hóa 5 tham số nhận vào tương ứng với mảng 5 biến phía dưới
     await pool.query(
-     INSERT INTO users (username, password_hash, name, role, is_superadmin) VALUES ($1, $2, $3, $4, $5)', // Phải đủ từ $1 đến $5
+      'INSERT INTO users (username, password_hash, name, role, is_superadmin) VALUES ($1, $2, $3, $4, $5)',
       [username, hash, 'Quản lý', 'admin', true]
     );
     console.log(`✅ Đã tạo tài khoản quản lý đầu tiên — username: "${username}"`);
