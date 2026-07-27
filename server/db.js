@@ -158,20 +158,25 @@ async function initSchema() {
     } else {
       console.log(`⚠️  SUPERADMIN_USERNAME="${target}" không khớp tài khoản nào đang có — bỏ qua, không đổi quyền ai cả. Hãy tạo tài khoản này trước (mục Người Dùng, hoặc dùng /api/auth/bootstrap-reset).`);
     }
-  } else {
+   } else {
     // Không đặt biến môi trường -> giữ hành vi cũ: nếu chưa ai là Super
     // Admin, phong tài khoản admin lâu đời nhất (chỉ chạy khi trống hẳn).
     const superCheck = await pool.query('SELECT COUNT(*)::int AS c FROM users WHERE is_superadmin = true');
-    if (superCheck.rows[0].c === 0) {
+    
+    if (superCheck.rows && superCheck.rows[0] && superCheck.rows[0].c === 0) {
       const { rows: oldestAdmin } = await pool.query(
         "SELECT id, username FROM users WHERE role = 'admin' ORDER BY id ASC LIMIT 1"
       );
-      if (oldestAdmin.length > 0) {
+      
+      // Kiểm tra mảng oldestAdmin có dữ liệu hay không
+      if (oldestAdmin && oldestAdmin.length > 0) {
+        // Đã sửa: Truyền chính xác id của phần tử đầu tiên trong mảng
         await pool.query('UPDATE users SET is_superadmin = true WHERE id = $1', [oldestAdmin[0].id]);
         console.log(`🔐 Đã phong tài khoản "${oldestAdmin[0].username}" thành Super Admin.`);
       }
     }
   }
+
 
   // ------------------------------------------------------------------
   // 9. Seed mật khẩu mặc định cho 2 file BTP nếu chưa từng được đặt
