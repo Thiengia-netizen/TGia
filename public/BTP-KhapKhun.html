@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Công Thức & Bán BTP – Khạp Khun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F4EE;
+    --paper:#FFFFFF;
+    --ink:#22302A;
+    --ink-soft:#5C6B63;
+    --line:#D9E0D6;
+    --ck:#C9612C;
+    --ck-soft:#FBE6D8;
+    --good:#2F6F5E;
+    --good-soft:#E3F0EB;
+    --bad:#B6433C;
+    --bad-soft:#FBE5E2;
+    --gold:#D9A441;
+    --gold-soft:#FBF1DC;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:16px;
+    font-size:14px;
+  }
+  .wrap{max-width:980px;margin:0 auto;}
+  header.top{
+    display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    padding-bottom:14px;margin-bottom:14px;border-bottom:2px dashed var(--line);
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .ck-badge{
+    font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:#fff;background:var(--ck);
+    border-radius:10px;padding:7px 12px;letter-spacing:0.04em;flex-shrink:0;
+  }
+  h1{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:0;line-height:1.25;}
+  .sub{color:var(--ink-soft);font-size:12.5px;margin-top:3px;max-width:560px;line-height:1.45;}
+  .save-status{font-size:12px;color:var(--ink-soft);text-align:right;font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
+  .save-status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:6px;vertical-align:middle;}
+  .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .tab-btn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13px;padding:8px 16px;border-radius:999px;
+    border:1.5px solid var(--line);background:var(--paper);color:var(--ink-soft);cursor:pointer;transition:all .15s ease;
+  }
+  .tab-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+  .toolbar input[type=search]{
+    flex:1;min-width:160px;padding:9px 14px;border:1px solid var(--line);border-radius:999px;
+    font-size:13.5px;font-family:'Inter',sans-serif;background:var(--paper);
+  }
+  .toolbar input[type=search]:focus{outline:none;border-color:var(--ck);}
+  .count-tag{font-size:12px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13px;padding:8px 16px;border-radius:999px;
+    border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--ink);color:#fff;}
+  .btn.ghost{border-color:var(--line);color:var(--ink-soft);}
+  .btn.ghost:hover{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);}
+  .btn.primary{background:var(--ck);border-color:var(--ck);color:#fff;}
+  .btn.primary:hover{filter:brightness(0.88);}
+  .btn.small{padding:5px 11px;font-size:12px;}
+  .btn.icon{padding:6px 9px;font-size:13px;line-height:1;}
+  .btn.danger-ghost{border-color:var(--bad-soft);color:var(--bad);background:var(--bad-soft);}
+  .btn.danger-ghost:hover{background:var(--bad);color:#fff;border-color:var(--bad);}
+  .dish-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;}
+  .dish-head{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;flex-wrap:wrap;}
+  .dish-head:hover{background:#FAFCF8;}
+  .dish-head .expand-btn{cursor:pointer;border:none;background:none;color:var(--ink-soft);font-size:13px;flex-shrink:0;transition:transform .15s ease;}
+  .dish-head .expand-btn.open{transform:rotate(90deg);color:var(--ck);}
+  .dish-name{font-weight:700;font-size:14.5px;border:none;background:transparent;font-family:'Inter',sans-serif;color:var(--ink);padding:2px 0;min-width:120px;flex:1 1 160px;}
+  .dish-name:focus{outline:none;border-bottom:1px solid var(--ck);}
+  .dish-meta{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-soft);margin-left:auto;}
+  .dish-meta b{color:var(--ink);font-family:'IBM Plex Mono',monospace;font-weight:700;}
+  .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+  .pill.ck{background:var(--ck-soft);color:var(--ck);}
+  .pill.flat{background:#F1F4EE;color:var(--ink-soft);}
+  .dish-body{padding:0 14px 14px 14px;display:none;}
+  .dish-body.open{display:block;}
+  .dish-body-inner{border-top:1px solid var(--line);padding-top:12px;}
+  .field-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:12px;}
+  .field{display:flex;flex-direction:column;gap:4px;}
+  .field label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);}
+  .field input, .field select{padding:7px 8px;border:1px solid var(--line);border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:13px;background:#fff;color:var(--ink);width:100%;}
+  .field input:focus, .field select:focus{outline:none;border-color:var(--ck);}
+  .field .hint{font-size:10.5px;color:var(--ink-soft);font-family:'Inter',sans-serif;}
+  .result-strip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  .result-chip{flex:1 1 130px;background:#F7F9F5;border:1px solid var(--line);border-radius:10px;padding:8px 10px;}
+  .result-chip.ck{background:var(--ck-soft);border-color:var(--ck);}
+  .result-chip.neg{background:var(--bad-soft);border-color:var(--bad);}
+  .result-chip .rl{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin-bottom:2px;}
+  .result-chip .rv{font-family:'IBM Plex Mono',monospace;font-size:15.5px;font-weight:700;}
+  .result-chip .rs{font-size:11px;color:var(--ink-soft);margin-top:1px;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);padding:6px 8px;border-bottom:1.5px solid var(--line);white-space:nowrap;}
+  th.num, td.num{text-align:right;}
+  td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  .ing-table select{width:100%;padding:5px 6px;border:1px solid var(--line);border-radius:6px;font-size:12.5px;background:#fff;font-family:'Inter',sans-serif;}
+  .ing-table input[type=number]{width:72px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-align:right;background:#fff;}
+  .ing-table input[type=number]:focus{outline:none;border-color:var(--ck);}
+  .ing-unit-badge{font-size:11px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;}
+  .ing-actions{text-align:right;}
+  .add-ing-row{margin-top:8px;}
+  .table-wrap{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:4px;}
+  .nvl-table input[type=number]{width:100px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-align:right;background:#fff;}
+  .nvl-table input[type=number]:focus{outline:none;border-color:var(--ck);}
+  .nvl-table input.nvl-name-input{width:100%;padding:5px 6px;border:none;border-bottom:1px solid transparent;font-family:'Inter',sans-serif;font-size:13px;background:transparent;}
+  .nvl-table input.nvl-name-input:focus{outline:none;border-bottom:1px solid var(--ck);}
+  .nvl-table select{padding:5px 6px;border:1px solid var(--line);border-radius:6px;font-size:12.5px;background:#fff;}
+  .stock-low{color:var(--bad);font-weight:700;}
+  .stock-ok{color:var(--ink);}
+  .empty-state{text-align:center;padding:26px 14px;color:var(--ink-soft);font-size:13px;}
+  .sale-form{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;}
+  .sale-form .field-grid{margin-bottom:10px;}
+  .shortage-warn{background:var(--bad-soft);border:1px solid var(--bad);border-radius:10px;padding:9px 11px;font-size:12.5px;color:var(--bad);margin-top:8px;line-height:1.5;}
+  .section-title{font-family:'Fraunces',serif;font-size:15.5px;font-weight:600;margin:0 0 8px 0;}
+  .log-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .log-toolbar select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:var(--paper);}
+  footer.note{margin-top:18px;font-size:11.5px;color:var(--ink-soft);text-align:center;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="ck-badge">KK</div>
+      <div>
+        <h1>Công Thức &amp; Bán BTP — Khạp Khun</h1>
+        <div class="sub">Tính giá vốn NVL theo mẻ cho từng món BTP. Khi ghi nhận số lượng bán ra, hệ thống tự động trừ nguyên vật liệu tương ứng khỏi tồn kho.</div>
+      </div>
+    </div>
+    <div class="save-status" id="saveStatus"><span class="dot"></span>Đã lưu trên máy này</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="formula">Công Thức BTP</button>
+    <button class="tab-btn" data-tab="sale">Bán BTP</button>
+    <button class="tab-btn" data-tab="nvl">Danh Mục NVL</button>
+  </div>
+
+  <!-- ============ TAB: CÔNG THỨC BTP ============ -->
+  <div class="panel active" id="formulaTab">
+    <div class="toolbar">
+      <input type="search" id="dishSearch" placeholder="Tìm món BTP...">
+      <span class="count-tag" id="dishCount"></span>
+      <button class="btn small" id="addDishBtn">+ Thêm món</button>
+      <button class="btn small ghost" id="exportCsvBtn">Xuất CSV</button>
+      <button class="btn small ghost" id="resetBtn">Khôi phục gốc</button>
+    </div>
+    <div id="dishList"></div>
+  </div>
+
+  <!-- ============ TAB: BÁN BTP ============ -->
+  <div class="panel" id="saleTab">
+    <div class="sale-form">
+      <div class="section-title">Ghi nhận bán ra — tự động trừ NVL</div>
+      <div class="field-grid">
+        <div class="field" style="grid-column:span 2;">
+          <label>Món BTP</label>
+          <select id="saleDish"></select>
+        </div>
+        <div class="field">
+          <label>Ngày</label>
+          <input type="date" id="saleDate">
+        </div>
+        <div class="field">
+          <label id="saleQtyLabel">Số lượng bán</label>
+          <input type="number" step="any" min="0" id="saleQty" placeholder="0">
+        </div>
+        <div class="field" style="grid-column:span 2;">
+          <label>Ghi chú</label>
+          <input type="text" id="saleNote" placeholder="VD: bán quán, giao chi nhánh...">
+        </div>
+      </div>
+      <div class="result-strip" id="salePreview"></div>
+      <button class="btn primary" id="saleSubmitBtn">Ghi nhận bán &amp; trừ kho NVL</button>
+    </div>
+
+    <div class="log-toolbar">
+      <div class="section-title" style="flex:1;">Lịch sử bán ra</div>
+      <select id="saleMonthFilter"></select>
+      <button class="btn small ghost" id="saleClearBtn">Xoá lịch sử</button>
+    </div>
+    <div class="result-strip" id="saleMonthSummary"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ngày</th><th>Món BTP</th><th class="num">Số lượng</th>
+            <th class="num">Vốn NVL đã dùng</th><th>Ghi chú</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="saleBody"></tbody>
+      </table>
+      <div class="empty-state" id="saleEmpty">Chưa có lượt bán nào.</div>
+    </div>
+  </div>
+
+  <!-- ============ TAB: DANH MỤC NVL ============ -->
+  <div class="panel" id="nvlTab">
+    <div class="toolbar">
+      <input type="search" id="nvlSearch" placeholder="Tìm nguyên liệu...">
+      <span class="count-tag" id="nvlCount"></span>
+      <button class="btn small" id="addNvlBtn">+ Thêm NVL</button>
+    </div>
+    <div class="table-wrap">
+      <table class="nvl-table">
+        <thead>
+          <tr><th>Tên nguyên liệu</th><th>ĐVT</th><th class="num">Giá (đ/ĐVT)</th><th class="num">Tồn kho</th><th></th></tr>
+        </thead>
+        <tbody id="nvlBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="note">Dữ liệu được lưu tự động trên máy này (trình duyệt). Dùng nút "Khôi phục gốc" nếu cần lấy lại đúng công thức ban đầu.</footer>
+</div>
+
+<script>
+const STORAGE_KEY = 'btp-khapkhun-state';
+const DEFAULT_DATA = {"nvl":[{"name":"Đường cát","unit":"kg","price":18800,"stock":0,"type":"mass"},{"name":"Hạt Nêm","unit":"kg","price":72000,"stock":0,"type":"mass"},{"name":"Bột Ngọt","unit":"kg","price":73000,"stock":0,"type":"mass"},{"name":"Muối trắng","unit":"kg","price":25000,"stock":0,"type":"mass"},{"name":"Đường phèn","unit":"kg","price":25500,"stock":0,"type":"mass"},{"name":"Bột béo","unit":"kg","price":75000,"stock":0,"type":"mass"},{"name":"Cốt Bò","unit":"kg","price":240000,"stock":0,"type":"mass"},{"name":"Nước tương maggi","unit":"lít","price":39000,"stock":0,"type":"mass"},{"name":"Dầu hào","unit":"kg","price":70000,"stock":0,"type":"mass"},{"name":"Xì dầu đặc biệt","unit":"lít","price":75000,"stock":0,"type":"mass"},{"name":"Giấm Lp","unit":"lít","price":518000,"stock":0,"type":"mass"},{"name":"Bột chanh","unit":"kg","price":285000,"stock":0,"type":"mass"},{"name":"Nước Mắm","unit":"kg","price":24000,"stock":0,"type":"mass"},{"name":"Cốt Dừa","unit":"lít","price":80000,"stock":0,"type":"mass"},{"name":"Tương ớt","unit":"kg","price":26800,"stock":0,"type":"mass"},{"name":"Tương ót chua ngọt","unit":"kg","price":35000,"stock":0,"type":"mass"},{"name":"Sữa Đặc","unit":"lít","price":51000,"stock":0,"type":"mass"},{"name":"Trà thái xanh","unit":"kg","price":350000,"stock":0,"type":"mass"},{"name":"Trà thái đỏ","unit":"kg","price":175000,"stock":0,"type":"mass"},{"name":"Trà đen","unit":"kg","price":0,"stock":0,"type":"mass"},{"name":"Trà Lài","unit":"kg","price":35000,"stock":0,"type":"mass"},{"name":"Trân châu đen","unit":"kg","price":28000,"stock":0,"type":"mass"},{"name":"Trân châu trắng","unit":"kg","price":34000,"stock":0,"type":"mass"},{"name":"Bột sương sáo","unit":"kg","price":300000,"stock":0,"type":"mass"},{"name":"Bột Năng","unit":"kg","price":32500,"stock":0,"type":"mass"},{"name":"Bột xù","unit":"kg","price":66000,"stock":0,"type":"mass"},{"name":"Gạo trắng","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Nếp Sáp","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Mè Trắng","unit":"kg","price":92000,"stock":0,"type":"mass"},{"name":"Đậu phộng","unit":"kg","price":65000,"stock":0,"type":"mass"},{"name":"Bột ớt","unit":"kg","price":109000,"stock":0,"type":"mass"},{"name":"Màu thực phẩm","unit":"chai","price":24000,"stock":0,"type":"count"},{"name":"Riềng","unit":"kg","price":25000,"stock":0,"type":"mass"},{"name":"Sả cây","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Ngò rí","unit":"kg","price":30000,"stock":0,"type":"mass"},{"name":"Ngò gai","unit":"kg","price":17000,"stock":0,"type":"mass"},{"name":"Ớt xiêm xanh","unit":"kg","price":50000,"stock":0,"type":"mass"},{"name":"Ớt ba tri","unit":"kg","price":40000,"stock":0,"type":"mass"},{"name":"Ớt hiểm đỏ","unit":"kg","price":30000,"stock":0,"type":"mass"},{"name":"Ớt xay","unit":"kg","price":40000,"stock":0,"type":"mass"},{"name":"Ớt sừng đỏ","unit":"kg","price":40000,"stock":0,"type":"mass"},{"name":"Rau muống","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Hẹ lá","unit":"kg","price":12000,"stock":0,"type":"mass"},{"name":"Xoài xanh","unit":"kg","price":16000,"stock":0,"type":"mass"},{"name":"Nấm hải sản","unit":"kg","price":60000,"stock":0,"type":"mass"},{"name":"Nấm đùi gà","unit":"kg","price":55000,"stock":0,"type":"mass"},{"name":"Bắp cải thảo","unit":"kg","price":13000,"stock":0,"type":"mass"},{"name":"Lá é","unit":"kg","price":50000,"stock":0,"type":"mass"},{"name":"Dưa Leo","unit":"kg","price":18000,"stock":0,"type":"mass"},{"name":"Cà chua bi","unit":"kg","price":25000,"stock":0,"type":"mass"},{"name":"Hành tây","unit":"kg","price":15000,"stock":0,"type":"mass"},{"name":"Hành tím","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Đậu đũa","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Đu đủ xanh","unit":"kg","price":10000,"stock":0,"type":"mass"},{"name":"Cà xanh thái","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Cà rốt","unit":"kg","price":16000,"stock":0,"type":"mass"},{"name":"Tắc trái","unit":"kg","price":25000,"stock":0,"type":"mass"},{"name":"Chanh","unit":"kg","price":36000,"stock":0,"type":"mass"},{"name":"Tỏi xay","unit":"kg","price":45000,"stock":0,"type":"mass"},{"name":"Me","unit":"kg","price":30000,"stock":0,"type":"mass"},{"name":"Tiêu hạt","unit":"kg","price":380000,"stock":0,"type":"mass"},{"name":"Lá dứa","unit":"kg","price":10000,"stock":0,"type":"mass"},{"name":"Trứng gà","unit":"trái","price":1750,"stock":0,"type":"count"},{"name":"Dầu ăn","unit":"lít","price":52000,"stock":0,"type":"mass"},{"name":"Bún tươi","unit":"kg","price":10000,"stock":0,"type":"mass"},{"name":"Mỳ gói","unit":"gói","price":2000,"stock":0,"type":"count"},{"name":"Hủ tiếu dai","unit":"kg","price":25000,"stock":0,"type":"mass"},{"name":"Giá sống","unit":"kg","price":8000,"stock":0,"type":"mass"},{"name":"Đậu khuôn","unit":"miếng","price":3000,"stock":0,"type":"count"},{"name":"Da hoành thánh","unit":"kg","price":15000,"stock":0,"type":"mass"},{"name":"Thịt xay","unit":"kg","price":85000,"stock":0,"type":"mass"},{"name":"Thịt thăn heo","unit":"kg","price":120000,"stock":0,"type":"mass"},{"name":"Nạm bò","unit":"kg","price":125000,"stock":0,"type":"mass"},{"name":"Gân bò","unit":"kg","price":145000,"stock":0,"type":"mass"},{"name":"Bò viên","unit":"kg","price":65000,"stock":0,"type":"mass"},{"name":"Mọc heo","unit":"kg","price":100000,"stock":0,"type":"mass"},{"name":"Xương cổ","unit":"kg","price":85000,"stock":0,"type":"mass"},{"name":"Xoài cát","unit":"kg","price":35000,"stock":0,"type":"mass"},{"name":"Cải bẹ xanh","unit":"kg","price":20000,"stock":0,"type":"mass"},{"name":"Lá chanh","unit":"kg","price":200000,"stock":0,"type":"mass"},{"name":"Mực ống","unit":"kg","price":200000,"stock":0,"type":"mass"},{"name":"Cá basa file","unit":"kg","price":140000,"stock":0,"type":"mass"},{"name":"Cá viên","unit":"kg","price":80000,"stock":0,"type":"mass"},{"name":"Cá tra bè","unit":"kg","price":59000,"stock":0,"type":"mass"},{"name":"Tôm tươi","unit":"kg","price":170000,"stock":0,"type":"mass"},{"name":"Đùi gà góc 4","unit":"kg","price":130000,"stock":0,"type":"mass"},{"name":"Nạc vai heo","unit":"kg","price":120000,"stock":0,"type":"mass"},{"name":"Ba chỉ bò","unit":"kg","price":130000,"stock":0,"type":"mass"},{"name":"Tôm khô","unit":"kg","price":722000,"stock":0,"type":"mass"},{"name":"Mật ong","unit":"kg","price":180000,"stock":0,"type":"mass"},{"name":"Gia vị phụ thêm","unit":"kg","price":7000,"stock":0,"type":"mass"},{"name":"Quế cây","unit":"kg","price":150000,"stock":0,"type":"mass"},{"name":"Hoa hồi","unit":"kg","price":44000,"stock":0,"type":"mass"},{"name":"Đinh hương","unit":"kg","price":650000,"stock":0,"type":"mass"},{"name":"Mắm Cá Thái","unit":"lít","price":162500,"stock":0,"type":"mass"},{"name":"Đường Đen","unit":"kg","price":48000,"stock":0,"type":"mass"},{"name":"lèo xương","unit":"lít","price":15000,"stock":0,"type":"mass"},{"name":"Btp - Somtam","unit":"lít","price":40000,"stock":0,"type":"mass"},{"name":"Btp - Cốt Chanh","unit":"lít","price":50000,"stock":0,"type":"mass"},{"name":"Sả xay","unit":"kg","price":0,"stock":0,"type":"mass"},{"name":"nước lọc","unit":"ml","price":0,"stock":0,"type":"count"},{"name":"Tomyum Paste","unit":"kg","price":146000,"stock":0,"type":"mass"}],"dishes":[{"name":"Btp-Heo Xào 2kg","output_qty":2.0,"output_unit":"kg","ingredients":[{"name":"Thịt xay","qty":2000.0,"waste":0.02},{"name":"Hạt Nêm","qty":92.0,"waste":0.0},{"name":"Bột Ngọt","qty":12.0,"waste":0.0},{"name":"Đường cát","qty":186.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":1000.0,"waste":0.0}]},{"name":"Btp-cốt lèo 2kg4","output_qty":2.4,"output_unit":"kg","ingredients":[{"name":"Đường cát","qty":1050.0,"waste":0.0},{"name":"Đường phèn","qty":2400.0,"waste":0.0},{"name":"Bột Ngọt","qty":300.0,"waste":0.0},{"name":"Cốt Bò","qty":360.0,"waste":0.0},{"name":"Nước tương maggi","qty":300.0,"waste":0.0},{"name":"Nước Mắm","qty":1800.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":1500.0,"waste":0.0},{"name":"Đinh hương","qty":5.0,"waste":0.0},{"name":"Quế cây","qty":10.0,"waste":0.0},{"name":"Hoa hồi","qty":7.0,"waste":0.0}]},{"name":"Btp-sốt pad","output_qty":1.0,"output_unit":"lít","ingredients":[{"name":"Tương ớt","qty":240.0,"waste":0.0},{"name":"Nước tương maggi","qty":900.0,"waste":0.0},{"name":"Xì dầu đặc biệt","qty":180.0,"waste":0.0},{"name":"Giấm Lp","qty":50.0,"waste":0.0},{"name":"Đường cát","qty":600.0,"waste":0.0},{"name":"Hạt Nêm","qty":20.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":1500.0,"waste":0.0},{"name":"Bột Ngọt","qty":0.03,"waste":0.0},{"name":"Btp - Cốt Chanh","qty":30.0,"waste":0.0}]},{"name":"btp-Somtam 6L","output_qty":6.0,"output_unit":"lít","ingredients":[{"name":"Nước Mắm","qty":4000.0,"waste":0.0},{"name":"Đường cát","qty":3600.0,"waste":0.0},{"name":"Bột Ngọt","qty":120.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":600.0,"waste":0.0}]},{"name":"Btp- Sốt xiên nướng","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Tương ớt","qty":80.0,"waste":0.0},{"name":"Dầu hào","qty":50.0,"waste":0.0},{"name":"Nước tương maggi","qty":100.0,"waste":0.0},{"name":"Bột Ngọt","qty":10.0,"waste":0.0},{"name":"Hạt Nêm","qty":30.0,"waste":0.0},{"name":"Đường cát","qty":100.0,"waste":0.0},{"name":"Dầu ăn","qty":50.0,"waste":0.0},{"name":"Ngò rí","qty":30.0,"waste":0.0},{"name":"Hành tím","qty":20.0,"waste":0.0},{"name":"Tỏi xay","qty":30.0,"waste":0.0},{"name":"Riềng","qty":50.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":1000.0,"waste":0.0},{"name":"Nạc vai heo","qty":2000.0,"waste":0.0}]},{"name":"Btp- Satế","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Sả xay","qty":1000.0,"waste":0.02},{"name":"Ớt xay","qty":1000.0,"waste":0.0},{"name":"Ớt xiêm xanh","qty":100.0,"waste":0.0},{"name":"Ớt hiểm đỏ","qty":150.0,"waste":0.0},{"name":"Ớt ba tri","qty":300.0,"waste":0.0},{"name":"Ớt sừng đỏ","qty":300.0,"waste":0.0},{"name":"Dầu ăn","qty":1500.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":1000.0,"waste":0.0}]},{"name":"Cốt Dừa","output_qty":1.0,"output_unit":"lít","ingredients":[{"name":"Cốt Dừa","qty":700.0,"waste":0.0},{"name":"Đường cát","qty":300.0,"waste":0.0},{"name":"Muối trắng","qty":8.0,"waste":0.0},{"name":"Bột béo","qty":80.0,"waste":0.0},{"name":"Bột Năng","qty":25.0,"waste":0.0}]},{"name":"Xôi lá Dứa","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Nếp Sáp","qty":2000.0,"waste":0.0},{"name":"Đường cát","qty":100.0,"waste":0.0},{"name":"Cốt Dừa","qty":100.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":1000.0,"waste":0.0}]},{"name":"btp - Sốt ướp gà","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Hạt Nêm","qty":35.0,"waste":0.0},{"name":"Đường cát","qty":100.0,"waste":0.0},{"name":"Bột Ngọt","qty":10.0,"waste":0.0},{"name":"Tỏi xay","qty":150.0,"waste":0.0},{"name":"Nước Mắm","qty":85.0,"waste":0.0},{"name":"Mật ong","qty":15.0,"waste":0.0},{"name":"Đùi gà góc 4","qty":3000.0,"waste":0.4},{"name":"Gia vị phụ thêm","qty":1000.0,"waste":0.0}]},{"name":"BTP - Trà tắc Thái xanh","output_qty":1.0,"output_unit":"lít","ingredients":[{"name":"Trà thái xanh","qty":20.0,"waste":0.0},{"name":"Đường cát","qty":400.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":650.0,"waste":0.0}]},{"name":"BTP - Trà Tắc Thái Đỏ","output_qty":1.0,"output_unit":"lít","ingredients":[{"name":"Trà thái đỏ","qty":20.0,"waste":0.0},{"name":"Đường cát","qty":400.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":650.0,"waste":0.0}]},{"name":"BTP- Trà Olong","output_qty":1.0,"output_unit":"lít","ingredients":[{"name":"Trà Lài","qty":20.0,"waste":0.0},{"name":"Đường cát","qty":400.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":600.0,"waste":0.0}]},{"name":"BTP - sốt ướp gà Yang Gai","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Tương ớt","qty":30.0,"waste":0.0},{"name":"Nước tương maggi","qty":30.0,"waste":0.0},{"name":"Nước Mắm","qty":50.0,"waste":0.0},{"name":"Dầu hào","qty":20.0,"waste":0.0},{"name":"Đường cát","qty":60.0,"waste":0.0},{"name":"Bột Ngọt","qty":20.0,"waste":0.0},{"name":"Hạt Nêm","qty":10.0,"waste":0.0},{"name":"Cốt Dừa","qty":60.0,"waste":0.0},{"name":"Ớt ba tri","qty":20.0,"waste":0.0},{"name":"Ớt hiểm đỏ","qty":20.0,"waste":0.0},{"name":"Ớt sừng đỏ","qty":20.0,"waste":0.0},{"name":"Ớt xiêm xanh","qty":20.0,"waste":0.0},{"name":"Tỏi xay","qty":10.0,"waste":0.0},{"name":"Ngò rí","qty":10.0,"waste":0.0},{"name":"Hành tím","qty":10.0,"waste":0.0}]},{"name":"Btp- Mắm Gỏi Cá TRê","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Btp - Somtam","qty":150.0,"waste":0.0},{"name":"Btp - Cốt Chanh","qty":50.0,"waste":0.0},{"name":"Ngò rí","qty":50.0,"waste":0.0},{"name":"Tỏi xay","qty":30.0,"waste":0.0},{"name":"Ớt hiểm đỏ","qty":20.0,"waste":0.0},{"name":"Ớt xiêm xanh","qty":20.0,"waste":0.0}]},{"name":"lèo hủ tiếu 15L","output_qty":15.0,"output_unit":"lít","ingredients":[{"name":"Đường cát","qty":350.0,"waste":0.0},{"name":"Đường phèn","qty":800.0,"waste":0.0},{"name":"Bột Ngọt","qty":100.0,"waste":0.0},{"name":"Cốt Bò","qty":130.0,"waste":0.0},{"name":"Nước tương maggi","qty":100.0,"waste":0.0},{"name":"Nước Mắm","qty":500.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":1500.0,"waste":0.0},{"name":"Đinh hương","qty":5.0,"waste":0.0},{"name":"Quế cây","qty":10.0,"waste":0.0},{"name":"Hoa hồi","qty":7.0,"waste":0.0}]},{"name":"BTP- Mắm Cá Thái 1kg","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Mắm Cá Thái","qty":400.0,"waste":0.0},{"name":"Đường cát","qty":250.0,"waste":0.0},{"name":"Bột Ngọt","qty":50.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":800.0,"waste":0.0}]},{"name":"Trà Sữa Thái Xanh","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Trà thái xanh","qty":25.0,"waste":0.0},{"name":"Trà Lài","qty":5.0,"waste":0.0},{"name":"Đường cát","qty":180.0,"waste":0.0},{"name":"Bột béo","qty":200.0,"waste":0.0},{"name":"Sữa Đặc","qty":200.0,"waste":0.0}]},{"name":"Btp - Trà sữa Thái Đỏ","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Trà thái đỏ","qty":35.0,"waste":0.0},{"name":"Đường cát","qty":180.0,"waste":0.0},{"name":"Bột béo","qty":200.0,"waste":0.0},{"name":"Sữa Đặc","qty":200.0,"waste":0.0}]},{"name":"Btp - Sương Sáo Đen","output_qty":1.3,"output_unit":"kg","ingredients":[{"name":"Bột sương sáo","qty":50.0,"waste":0.0},{"name":"Đường cát","qty":100.0,"waste":0.0},{"name":"Gia vị phụ thêm","qty":700.0,"waste":0.0}]},{"name":"Btp -  Cốt Lẩu 14L","output_qty":14.0,"output_unit":"lít","ingredients":[{"name":"nước lọc","qty":3500.0,"waste":0.0},{"name":"Btp - Somtam","qty":3000.0,"waste":0.0},{"name":"Bột chanh","qty":200.0,"waste":0.0},{"name":"Tương ớt","qty":100.0,"waste":0.0}]},{"name":"SÔT TOMYUM (ĐỎ)","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Tương ớt","qty":20.0,"waste":0.0},{"name":"Đường cát","qty":10.0,"waste":0.0},{"name":"Btp - Somtam","qty":150.0,"waste":0.0},{"name":"Btp - Cốt Chanh","qty":50.0,"waste":0.0},{"name":"Tomyum Paste","qty":20.0,"waste":0.0}]},{"name":"bún cá isaan (tomseb)","output_qty":1.0,"output_unit":"kg","ingredients":[{"name":"Bún tươi","qty":150.0,"waste":0.0}]}]};
+
+const fmt = n => Math.round(n||0).toLocaleString('vi-VN');
+const fmt2 = n => (Math.round((n||0)*100)/100).toLocaleString('vi-VN', {maximumFractionDigits:2});
+
+let state = null;
+let saveTimer = null;
+let openDishIdx = new Set();
+let nextNvlId = 0;
+let nextDishId = 0;
+let nextSaleId = 0;
+
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+
+/** Loại NVL theo ĐVT: 'mass' = kg/lít (nhập theo gram/ml, chia 1000), 'count' = đếm (cái/trái/miếng/gói/chai...) */
+function unitType(unit){
+  const u = (unit||'').trim().toLowerCase();
+  return (u==='kg' || u==='lít' || u==='lit' || u==='l') ? 'mass' : 'count';
+}
+/** Nhãn đơn vị nhập định lượng cho 1 NVL trong công thức: gram/ml cho mass, đvt gốc cho count */
+function ingInputUnit(nvlItem){
+  if(!nvlItem) return 'g';
+  if(nvlItem.type==='mass') return (nvlItem.unit==='lít' || nvlItem.unit==='lit') ? 'ml' : 'g';
+  return nvlItem.unit || 'cái';
+}
+
+function buildDefaultState(){
+  return {
+    nvl: deepClone(DEFAULT_DATA.nvl).map((n,i)=>({...n, id:i+1, type:unitType(n.unit)})),
+    dishes: DEFAULT_DATA.dishes.map((d,i) => ({
+      id: i+1,
+      name: d.name,
+      output_qty: d.output_qty,
+      output_unit: d.output_unit,
+      ingredients: deepClone(d.ingredients).map((ing,j)=>({...ing, id:j+1}))
+    })),
+    sales: []
+  };
+}
+
+function recalcNextIds(){
+  nextNvlId = Math.max(0, ...state.nvl.map(n=>n.id||0)) + 1;
+  nextDishId = Math.max(0, ...state.dishes.map(d=>d.id||0)) + 1;
+  nextSaleId = Math.max(0, ...(state.sales||[]).map(e=>e.id||0)) + 1;
+  state.dishes.forEach(d=>{
+    let maxI = Math.max(0, ...d.ingredients.map(x=>x.id||0));
+    d.ingredients.forEach(x=>{ if(!x.id){ maxI++; x.id=maxI; } });
+  });
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && Array.isArray(parsed.nvl) && Array.isArray(parsed.dishes)){
+        state = parsed;
+        if(!Array.isArray(state.sales)) state.sales = Array.isArray(parsed.exports) ? parsed.exports : [];
+        state.nvl.forEach(n=>{
+          if(n.stock===undefined) n.stock=0;
+          n.type = unitType(n.unit);
+        });
+        migrateAssignIds();
+      }
+    }
+  }catch(e){ /* chưa có dữ liệu lưu trước đó, hoặc trình duyệt chặn localStorage */ }
+  if(!state) state = buildDefaultState();
+  recalcNextIds();
+  render();
+}
+
+function migrateAssignIds(){
+  let maxNvl = Math.max(0, ...state.nvl.map(n=>n.id||0));
+  state.nvl.forEach(n=>{ if(!n.id){ maxNvl++; n.id=maxNvl; } });
+  let maxDish = Math.max(0, ...state.dishes.map(d=>d.id||0));
+  state.dishes.forEach(d=>{
+    if(!d.id){ maxDish++; d.id=maxDish; }
+    if(!Array.isArray(d.ingredients)) d.ingredients=[];
+    let maxIng = Math.max(0, ...d.ingredients.map(x=>x.id||0));
+    d.ingredients.forEach(x=>{ if(!x.id){ maxIng++; x.id=maxIng; } });
+  });
+  let maxSale = Math.max(0, ...(state.sales||[]).map(e=>e.id||0));
+  (state.sales||[]).forEach(e=>{ if(!e.id){ maxSale++; e.id=maxSale; } });
+}
+
+function queueSave(){
+  const el = document.getElementById('saveStatus');
+  el.innerHTML = '<span class="dot" style="background:var(--gold)"></span>Đang lưu...';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      el.innerHTML = '<span class="dot"></span>Đã lưu trên máy này';
+    }catch(e){
+      el.innerHTML = '<span class="dot" style="background:var(--bad)"></span>Lưu lỗi (vẫn dùng được)';
+    }
+  }, 400);
+}
+
+/* ---------------- NVL HELPERS ---------------- */
+function nvlIndex(name){ return state.nvl.findIndex(x => x.name === name); }
+function nvlByName(name){ const i = nvlIndex(name); return i>=0 ? state.nvl[i] : null; }
+function nvlPrice(name){ const n = nvlByName(name); return n ? (Number(n.price)||0) : 0; }
+
+/** Quy đổi định lượng nhập (g/ml hoặc cái) -> đơn vị kho NVL (kg/lít hoặc cái) */
+function ingQtyInStockUnit(ing){
+  const n = nvlByName(ing.name);
+  const t = n ? n.type : 'mass';
+  const qty = Number(ing.qty)||0;
+  return t==='mass' ? qty/1000 : qty;
+}
+/** Thành tiền 1 nguyên liệu trong công thức (đã gồm % hao hụt) */
+function ingCost(ing){
+  const price = nvlPrice(ing.name);
+  return ingQtyInStockUnit(ing) * price * (1 + (Number(ing.waste)||0));
+}
+
+/* ---------------- TÍNH GIÁ VỐN THEO MẺ ----------------
+   Vốn NVL/mẻ  = tổng chi phí nguyên liệu cho TOÀN BỘ mẻ (output_qty ĐVT)
+   Vốn NVL/ĐVT = Vốn NVL/mẻ ÷ output_qty  (giá vốn cho 1kg, 1 lít, 1 cái...)
+   Không tính giá bán / lợi nhuận — chỉ theo dõi giá vốn nguyên vật liệu.
+-------------------------------------------------------- */
+function calcDish(dish){
+  let totalNvl = 0;
+  dish.ingredients.forEach(ing=>{ totalNvl += ingCost(ing); });
+  const outQty = Number(dish.output_qty)||0;
+  const perUnitNvl = outQty>0 ? totalNvl/outQty : 0;
+  return { totalNvl, perUnitNvl };
+}
+
+/* ---------------- RENDER: DANH SÁCH MÓN BTP ---------------- */
+function renderDishList(){
+  const q = (document.getElementById('dishSearch').value||'').trim().toLowerCase();
+  const list = document.getElementById('dishList');
+  const dishes = state.dishes.filter(d => !q || d.name.toLowerCase().includes(q));
+  document.getElementById('dishCount').textContent = `${dishes.length}/${state.dishes.length} món`;
+
+  if(dishes.length===0){
+    list.innerHTML = `<div class="empty-state">Không tìm thấy món BTP nào khớp "${escapeHtml(q)}".</div>`;
+    return;
+  }
+
+  list.innerHTML = dishes.map(dish=>{
+    const c = calcDish(dish);
+    const open = openDishIdx.has(dish.id);
+    return `
+    <div class="dish-card" data-id="${dish.id}">
+      <div class="dish-head" data-toggle="${dish.id}">
+        <button class="expand-btn ${open?'open':''}" data-toggle="${dish.id}">▶</button>
+        <input class="dish-name" data-id="${dish.id}" data-field="name" value="${escapeAttr(dish.name)}">
+        <div class="dish-meta">
+          <span class="pill flat">${fmt2(dish.output_qty)} ${escapeHtml(dish.output_unit)}/mẻ</span>
+          <span class="pill ck">Vốn/mẻ <b>${fmt(c.totalNvl)}đ</b></span>
+          <span class="pill flat">Vốn/${escapeHtml(dish.output_unit)} <b>${fmt(c.perUnitNvl)}đ</b></span>
+          <button class="btn icon danger-ghost" data-action="del-dish" data-id="${dish.id}" title="Xoá món">✕</button>
+        </div>
+      </div>
+      <div class="dish-body ${open?'open':''}" id="body_${dish.id}">
+        ${open ? buildDishBody(dish, dish.id, c) : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  attachDishEvents(list);
+}
+
+function buildDishBody(dish, i, c){
+  return `
+  <div class="dish-body-inner">
+    <div class="field-grid">
+      <div class="field">
+        <label>Số lượng ra / mẻ</label>
+        <input type="number" step="any" min="0" data-id="${dish.id}" data-field="output_qty" value="${dish.output_qty}">
+      </div>
+      <div class="field">
+        <label>Đơn vị tính</label>
+        <select data-id="${dish.id}" data-field="output_unit">
+          ${['kg','lít','cái','hộp','bịch','miếng','trái'].map(u=>`<option value="${u}" ${dish.output_unit===u?'selected':''}>${u}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field computed">
+        <label>Vốn NVL / mẻ</label>
+        <input disabled value="${fmt(c.totalNvl)}đ">
+      </div>
+      <div class="field computed">
+        <label>Vốn NVL / ${escapeHtml(dish.output_unit)}</label>
+        <input disabled value="${fmt(c.perUnitNvl)}đ">
+      </div>
+    </div>
+    ${buildResultStripHtml(c)}
+    <div class="table-wrap" style="margin-bottom:8px;">
+      <table class="ing-table">
+        <thead>
+          <tr><th>Nguyên liệu</th><th class="num">Định lượng / mẻ</th><th></th><th class="num">% Hao hụt</th><th class="num">Thành tiền</th><th></th></tr>
+        </thead>
+        <tbody>
+          ${buildIngredientTable(dish, i)}
+        </tbody>
+      </table>
+    </div>
+    <button class="btn small add-ing-row" data-action="add-ing" data-id="${dish.id}">+ Thêm nguyên liệu</button>
+  </div>`;
+}
+
+function buildResultStripHtml(c){
+  return `
+  <div class="result-strip">
+    <div class="result-chip ck">
+      <div class="rl">Vốn NVL / cả mẻ</div>
+      <div class="rv">${fmt(c.totalNvl)}đ</div>
+    </div>
+    <div class="result-chip">
+      <div class="rl">Vốn NVL / đơn vị</div>
+      <div class="rv">${fmt(c.perUnitNvl)}đ</div>
+    </div>
+  </div>`;
+}
+
+function buildIngredientTable(dish, i){
+  return dish.ingredients.map(ing=>{
+    const n = nvlByName(ing.name);
+    const inputUnit = ingInputUnit(n);
+    const cost = ingCost(ing);
+    return `
+    <tr data-ing-id="${ing.id}">
+      <td><select data-id="${dish.id}" data-ing-id="${ing.id}" data-field="name">${nvlOptionsHtml(ing.name)}</select></td>
+      <td class="num"><input type="number" step="any" min="0" data-id="${dish.id}" data-ing-id="${ing.id}" data-field="qty" value="${ing.qty}"></td>
+      <td class="ing-unit-badge">${escapeHtml(inputUnit)}</td>
+      <td class="num"><input type="number" step="any" min="0" max="1" data-id="${dish.id}" data-ing-id="${ing.id}" data-field="waste" value="${ing.waste}" style="width:58px"></td>
+      <td class="num">${fmt(cost)}đ</td>
+      <td class="ing-actions"><button class="btn icon danger-ghost" data-action="del-ing" data-id="${dish.id}" data-ing-id="${ing.id}">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function nvlOptionsHtml(selected){
+  return state.nvl.map(n=>`<option value="${escapeAttr(n.name)}" ${n.name===selected?'selected':''}>${escapeHtml(n.name)}</option>`).join('');
+}
+
+function dishById(id){ return state.dishes.find(d=>d.id===id); }
+
+function attachDishEvents(scope){
+  scope.querySelectorAll('[data-toggle]').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(e.target.classList.contains('dish-name')) return;
+      const id = Number(el.dataset.toggle);
+      if(openDishIdx.has(id)) openDishIdx.delete(id); else openDishIdx.add(id);
+      renderDishList();
+    });
+  });
+
+  scope.querySelectorAll('input.dish-name').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const dish = dishById(Number(inp.dataset.id));
+      if(dish){ dish.name = inp.value; queueSave(); }
+    });
+    inp.addEventListener('click', e=>e.stopPropagation());
+  });
+
+  scope.querySelectorAll('[data-action="del-dish"]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const id = Number(btn.dataset.id);
+      const dish = dishById(id);
+      if(!dish) return;
+      if(!confirm(`Xoá món "${dish.name}"? Công thức này sẽ mất, không thể hoàn tác.`)) return;
+      state.dishes = state.dishes.filter(d=>d.id!==id);
+      openDishIdx.delete(id);
+      renderDishList();
+      refreshSaleDishOptions();
+      queueSave();
+    });
+  });
+
+  scope.querySelectorAll('.dish-body input[type=number], .dish-body select').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const dish = dishById(Number(inp.dataset.id));
+      if(!dish) return;
+      const field = inp.dataset.field;
+      const ingId = inp.dataset.ingId ? Number(inp.dataset.ingId) : null;
+      if(ingId){
+        const ing = dish.ingredients.find(x=>x.id===ingId);
+        if(!ing) return;
+        if(field==='name') ing.name = inp.value;
+        else if(field==='qty') ing.qty = Number(inp.value)||0;
+        else if(field==='waste') ing.waste = Math.max(0, Math.min(1, Number(inp.value)||0));
+      } else {
+        if(field==='output_qty') dish.output_qty = Number(inp.value)||0;
+        else if(field==='output_unit') dish.output_unit = inp.value;
+      }
+      rebuildDishBody(dish);
+      updateDishHeadMeta(dish);
+      refreshSaleDishOptions();
+      queueSave();
+    });
+  });
+
+  scope.querySelectorAll('[data-action="add-ing"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const dish = dishById(Number(btn.dataset.id));
+      if(!dish) return;
+      const maxId = Math.max(0, ...dish.ingredients.map(x=>x.id||0));
+      dish.ingredients.push({ id: maxId+1, name: state.nvl[0]?.name||'', qty:0, waste:0 });
+      rebuildDishBody(dish);
+      updateDishHeadMeta(dish);
+      queueSave();
+    });
+  });
+
+  scope.querySelectorAll('[data-action="del-ing"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const dish = dishById(Number(btn.dataset.id));
+      if(!dish) return;
+      dish.ingredients = dish.ingredients.filter(x=>x.id!==Number(btn.dataset.ingId));
+      rebuildDishBody(dish);
+      updateDishHeadMeta(dish);
+      queueSave();
+    });
+  });
+}
+
+function rebuildDishBody(dish){
+  const body = document.getElementById(`body_${dish.id}`);
+  if(!body) return;
+  const c = calcDish(dish);
+  body.innerHTML = buildDishBody(dish, dish.id, c);
+  attachDishEvents(body);
+}
+
+function updateDishHeadMeta(dish){
+  const card = document.querySelector(`.dish-card[data-id="${dish.id}"]`);
+  if(!card) return;
+  const c = calcDish(dish);
+  const meta = card.querySelector('.dish-meta');
+  meta.innerHTML = `
+    <span class="pill flat">${fmt2(dish.output_qty)} ${escapeHtml(dish.output_unit)}/mẻ</span>
+    <span class="pill ck">Vốn/mẻ <b>${fmt(c.totalNvl)}đ</b></span>
+    <span class="pill flat">Vốn/${escapeHtml(dish.output_unit)} <b>${fmt(c.perUnitNvl)}đ</b></span>
+    <button class="btn icon danger-ghost" data-action="del-dish" data-id="${dish.id}" title="Xoá món">✕</button>
+  `;
+  meta.querySelector('[data-action="del-dish"]').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(!confirm(`Xoá món "${dish.name}"? Công thức này sẽ mất, không thể hoàn tác.`)) return;
+    state.dishes = state.dishes.filter(d=>d.id!==dish.id);
+    openDishIdx.delete(dish.id);
+    renderDishList();
+    refreshSaleDishOptions();
+    queueSave();
+  });
+}
+
+function recomputeAllDishes(){ renderDishList(); }
+
+/* ---------------- RENDER: DANH MỤC NVL ---------------- */
+function renderNvl(){
+  const q = (document.getElementById('nvlSearch').value||'').trim().toLowerCase();
+  const body = document.getElementById('nvlBody');
+  const items = state.nvl.filter(n => !q || n.name.toLowerCase().includes(q));
+  document.getElementById('nvlCount').textContent = `${items.length}/${state.nvl.length} NVL`;
+
+  body.innerHTML = items.map(item=>{
+    const lowStock = (item.stock||0) < 0;
+    return `
+    <tr data-id="${item.id}">
+      <td class="name-cell"><input class="nvl-name-input" data-id="${item.id}" data-field="name" value="${escapeAttr(item.name)}"></td>
+      <td>
+        <select data-id="${item.id}" data-field="unit">
+          ${['kg','lít','cái','trái','miếng','gói','chai','hộp','bịch'].map(u=>`<option value="${u}" ${item.unit===u?'selected':''}>${u}</option>`).join('')}
+        </select>
+      </td>
+      <td class="num"><input type="number" step="any" min="0" data-id="${item.id}" data-field="price" value="${item.price}"></td>
+      <td class="num"><input type="number" step="any" data-id="${item.id}" data-field="stock" value="${item.stock||0}" class="${lowStock?'stock-low':'stock-ok'}"></td>
+      <td><button class="btn icon danger-ghost" data-action="del-nvl" data-id="${item.id}">✕</button></td>
+    </tr>`;
+  }).join('');
+
+  attachNvlEvents();
+}
+
+function nvlByIdNum(id){ return state.nvl.find(n=>n.id===id); }
+
+function attachNvlEvents(){
+  document.querySelectorAll('#nvlBody input, #nvlBody select').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const item = nvlByIdNum(Number(inp.dataset.id));
+      if(!item) return;
+      const field = inp.dataset.field;
+      if(field==='name') item.name = inp.value;
+      else if(field==='unit'){ item.unit = inp.value; item.type = unitType(inp.value); }
+      else if(field==='price') item.price = Number(inp.value)||0;
+      else if(field==='stock') item.stock = Number(inp.value)||0;
+      recomputeAllDishes();
+      refreshSaleDishOptions();
+      renderSalePreview();
+      queueSave();
+    });
+  });
+  document.querySelectorAll('[data-action="del-nvl"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = Number(btn.dataset.id);
+      const item = nvlByIdNum(id);
+      if(!item) return;
+      const used = state.dishes.some(d=>d.ingredients.some(i=>i.name===item.name));
+      if(used && !confirm(`"${item.name}" đang được dùng trong ít nhất 1 công thức BTP. Vẫn xoá?`)) return;
+      state.nvl = state.nvl.filter(n=>n.id!==id);
+      renderNvl();
+      recomputeAllDishes();
+      queueSave();
+    });
+  });
+}
+
+function filterNvl(){ renderNvl(); }
+
+function addNewNvl(){
+  const maxId = Math.max(0, ...state.nvl.map(n=>n.id||0));
+  state.nvl.unshift({ id:maxId+1, name:'NVL mới', unit:'kg', price:0, stock:0, type:'mass' });
+  renderNvl();
+  queueSave();
+}
+
+function addNewDish(){
+  const maxId = Math.max(0, ...state.dishes.map(d=>d.id||0));
+  const id = maxId+1;
+  state.dishes.unshift({ id, name:'Món BTP mới', output_qty:1, output_unit:'kg', ingredients:[] });
+  openDishIdx.add(id);
+  renderDishList();
+  refreshSaleDishOptions();
+  queueSave();
+}
+
+/* ---------------- TAB: BÁN BTP ---------------- */
+function refreshSaleDishOptions(){
+  const sel = document.getElementById('saleDish');
+  const cur = sel.value;
+  sel.innerHTML = state.dishes.map(d=>`<option value="${d.id}">${escapeHtml(d.name)}</option>`).join('');
+  if(state.dishes.some(d=>String(d.id)===cur)) sel.value = cur;
+  updateSaleQtyLabel();
+  renderSalePreview();
+}
+
+function updateSaleQtyLabel(){
+  const dish = dishById(Number(document.getElementById('saleDish').value));
+  document.getElementById('saleQtyLabel').textContent = dish ? `Số lượng bán (${dish.output_unit})` : 'Số lượng bán';
+}
+
+function renderSalePreview(){
+  const dish = dishById(Number(document.getElementById('saleDish').value));
+  const preview = document.getElementById('salePreview');
+  if(!dish){ preview.innerHTML = `<div class="result-chip"><div class="rl">Chưa có món BTP nào</div><div class="rs">Hãy thêm món ở tab "Công Thức BTP"</div></div>`; return; }
+  const qty = Number(document.getElementById('saleQty').value)||0;
+  const c = calcDish(dish);
+  const ratio = qty / (Number(dish.output_qty)||1);
+  const vonNvl = c.perUnitNvl * qty;
+
+  let html = `
+    <div class="result-chip ck"><div class="rl">Vốn NVL / ${escapeHtml(dish.output_unit)}</div><div class="rv">${fmt(c.perUnitNvl)}đ</div></div>
+    <div class="result-chip"><div class="rl">Vốn NVL sẽ trừ (${fmt2(qty)} ${escapeHtml(dish.output_unit)})</div><div class="rv">${fmt(vonNvl)}đ</div></div>
+  `;
+  preview.innerHTML = html;
+
+  const shortages = [];
+  dish.ingredients.forEach(ing=>{
+    const n = nvlByName(ing.name);
+    if(!n) return;
+    const usedTotal = ingQtyInStockUnit(ing) * ratio;
+    if((n.stock||0) < usedTotal) shortages.push({name:n.name, need:usedTotal, have:n.stock||0, unit:n.unit});
+  });
+  if(qty>0 && shortages.length>0){
+    const warn = document.createElement('div');
+    warn.className = 'shortage-warn';
+    warn.style.flex = '1 1 100%';
+    warn.innerHTML = `⚠ Thiếu tồn kho NVL:<br>${shortages.map(s=>`${escapeHtml(s.name)}: cần ${fmt2(s.need)} ${escapeHtml(s.unit)}, còn ${fmt2(s.have)} ${escapeHtml(s.unit)}`).join('<br>')}`;
+    preview.appendChild(warn);
+  }
+}
+
+function submitSale(){
+  const dishId = Number(document.getElementById('saleDish').value);
+  const qty = Number(document.getElementById('saleQty').value)||0;
+  const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
+  const note = document.getElementById('saleNote').value.trim();
+  const dish = dishById(dishId);
+  if(!dish){ alert('Chưa có món BTP nào — hãy thêm món ở tab "Công Thức BTP".'); return; }
+  if(qty<=0){ alert('Nhập số lượng bán > 0.'); return; }
+
+  const c = calcDish(dish);
+  const ratio = qty / (Number(dish.output_qty)||1);
+  const vonNvl = c.perUnitNvl * qty;
+
+  dish.ingredients.forEach(ing=>{
+    const n = nvlByName(ing.name);
+    if(!n) return;
+    const used = ingQtyInStockUnit(ing) * ratio;
+    n.stock = (n.stock||0) - used;
+  });
+
+  state.sales.unshift({
+    id: nextSaleId++,
+    date, dish_id: dish.id, dish_name: dish.name,
+    qty, unit: dish.output_unit, von_nvl: vonNvl, note
+  });
+
+  document.getElementById('saleNote').value = '';
+  document.getElementById('saleQty').value = '';
+  renderSalePreview();
+  renderSaleLog();
+  renderSaleMonthSummary();
+  renderNvl();
+  queueSave();
+}
+
+function saleMonthKey(dateStr){ return (dateStr||'').slice(0,7); }
+
+function refreshSaleMonthOptions(){
+  const sel = document.getElementById('saleMonthFilter');
+  const cur = sel.value;
+  const months = new Set((state.sales||[]).map(e=>saleMonthKey(e.date)));
+  const today = new Date().toISOString().slice(0,7);
+  months.add(today);
+  const sorted = [...months].filter(Boolean).sort().reverse();
+  sel.innerHTML = `<option value="">Tất cả</option>` + sorted.map(m=>{
+    const [y,mo] = m.split('-');
+    return `<option value="${m}">Tháng ${mo}/${y}</option>`;
+  }).join('');
+  if(sorted.includes(cur) || cur==='') sel.value = cur;
+  else sel.value = today;
+}
+
+function renderSaleMonthSummary(){
+  const sel = document.getElementById('saleMonthFilter');
+  const filter = sel.value;
+  const sales = (state.sales||[]).filter(e => !filter || saleMonthKey(e.date)===filter);
+
+  let totalNvl=0;
+  sales.forEach(e=>{ totalNvl += e.von_nvl||0; });
+
+  const wrap = document.getElementById('saleMonthSummary');
+  const label = filter ? `Tháng ${filter.split('-')[1]}/${filter.split('-')[0]}` : 'Tất cả các tháng';
+  let html = '';
+  html += `<div class="result-chip"><div class="rl">${escapeHtml(label)} — Số lượt bán</div><div class="rv">${sales.length}</div></div>`;
+  html += `<div class="result-chip ck"><div class="rl">Tổng vốn NVL đã dùng</div><div class="rv">${fmt(totalNvl)}đ</div></div>`;
+  wrap.innerHTML = sales.length>0 ? html : `<div class="result-chip"><div class="rl">${escapeHtml(label)}</div><div class="rv">—</div><div class="rs">Chưa có lượt bán nào</div></div>`;
+}
+
+function renderSaleLog(){
+  const body = document.getElementById('saleBody');
+  const empty = document.getElementById('saleEmpty');
+  body.innerHTML = '';
+  const sales = state.sales||[];
+  sales.forEach(e=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(e.date)}</td>
+      <td>${escapeHtml(e.dish_name)}</td>
+      <td class="num">${fmt2(e.qty)} ${escapeHtml(e.unit)}</td>
+      <td class="num">${fmt(e.von_nvl)}đ</td>
+      <td>${escapeHtml(e.note||'')}</td>
+      <td><button class="btn icon danger-ghost" data-action="del-sale" data-id="${e.id}" title="Xoá &amp; hoàn tồn kho">✕</button></td>
+    `;
+    body.appendChild(tr);
+  });
+  empty.style.display = sales.length===0 ? 'block' : 'none';
+
+  body.querySelectorAll('[data-action="del-sale"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = Number(btn.dataset.id);
+      const e = state.sales.find(x=>x.id===id);
+      if(!e) return;
+      if(!confirm(`Xoá lượt bán "${e.dish_name}" ngày ${e.date}? Tồn kho NVL sẽ được hoàn lại.`)) return;
+      const dish = dishById(e.dish_id);
+      if(dish){
+        const ratio = e.qty / (Number(dish.output_qty)||1);
+        dish.ingredients.forEach(ing=>{
+          const n = nvlByName(ing.name);
+          if(!n) return;
+          const used = ingQtyInStockUnit(ing) * ratio;
+          n.stock = (n.stock||0) + used;
+        });
+      }
+      state.sales = state.sales.filter(x=>x.id!==id);
+      renderSaleLog();
+      renderSaleMonthSummary();
+      refreshSaleMonthOptions();
+      renderNvl();
+      queueSave();
+    });
+  });
+
+  refreshSaleMonthOptions();
+  renderSaleMonthSummary();
+}
+
+/* ---------------- HELPERS & GLOBAL EVENTS ---------------- */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+  });
+});
+
+document.getElementById('dishSearch').addEventListener('input', renderDishList);
+document.getElementById('nvlSearch').addEventListener('input', filterNvl);
+document.getElementById('addDishBtn').addEventListener('click', addNewDish);
+document.getElementById('addNvlBtn').addEventListener('click', addNewNvl);
+
+document.getElementById('saleDish').addEventListener('change', ()=>{ updateSaleQtyLabel(); renderSalePreview(); });
+document.getElementById('saleQty').addEventListener('input', renderSalePreview);
+document.getElementById('saleMonthFilter').addEventListener('change', renderSaleMonthSummary);
+document.getElementById('saleSubmitBtn').addEventListener('click', submitSale);
+document.getElementById('saleClearBtn').addEventListener('click', ()=>{
+  if(!state.sales || state.sales.length===0) return;
+  if(!confirm('Xoá toàn bộ lịch sử bán? Tồn kho NVL sẽ KHÔNG được hoàn lại tự động — chỉ xoá lịch sử.')) return;
+  state.sales = [];
+  renderSaleLog();
+  renderSaleMonthSummary();
+  queueSave();
+});
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(!confirm('Khôi phục toàn bộ dữ liệu về công thức gốc? Mọi chỉnh sửa (giá NVL, tồn kho, công thức, món đã thêm/xoá, lịch sử bán...) sẽ bị xoá.')) return;
+  state = buildDefaultState();
+  openDishIdx.clear();
+  recalcNextIds();
+  render();
+  queueSave();
+});
+
+document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
+  const rows = [['Tên BTP','SL/mẻ','ĐVT','Vốn NVL/mẻ','Vốn NVL/ĐVT']];
+  state.dishes.forEach(dish=>{
+    const c = calcDish(dish);
+    rows.push([dish.name, dish.output_qty, dish.output_unit, Math.round(c.totalNvl), Math.round(c.perUnitNvl)]);
+  });
+  const csv = '\uFEFF' + rows.map(r => r.map(v=>{
+    const s = String(v);
+    return /[",;\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cong_thuc_btp_btp-khapkhun-state.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+function render(){
+  renderDishList();
+  renderNvl();
+  refreshSaleDishOptions();
+  renderSaleLog();
+  if(!document.getElementById('saleDate').value){
+    document.getElementById('saleDate').value = new Date().toISOString().slice(0,10);
+  }
+}
+
+loadState();
+</script>
+</body>
+</html>
